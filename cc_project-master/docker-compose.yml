@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  zoo1:
+    image: zookeeper:latest
+    hostname: zoo1
+    restart: always
+    ports:
+      - 2181:2181
+      - 8888:8888
+ # user:
+  #   image: user
+  #   volumes:
+  #   - ./user/:/api
+  #   build: ./user
+  #   container_name: users
+  #   restart: always
+  #   ports: 
+  #     - "5001:5001"
+
+  # ride:
+  #   image: ride
+  #   volumes:
+  #   - ./ride/:/api
+  #   build: ./ride
+  #   container_name: rides
+  #   restart: always
+  #   ports: 
+  #     - "5005:5005"
+  #   links:
+  #     - user
+
+  orchestrator:
+    image: orchestrator
+    volumes :
+    - ./orchestrator/:/api
+    - /var/run/docker.sock:/var/run/docker.sock
+    build: ./orchestrator
+    container_name: orchestrator
+    restart: always
+    ports:
+      - "80:3002"
+    depends_on:
+      - rabbitmq
+
+
+  master:
+    image: master
+    volumes :
+    - ./master/:/api
+#    - /var/run/docker.sock:/var/run/docker.sock
+    build: ./master
+    container_name: master
+    restart: always
+    depends_on:
+      - rabbitmq
+      - orchestrator
+
+  slave:
+    image: slave
+    volumes :
+    - ./slave/:/api
+    - /home/ubuntu/cc_project/sharedData/:/api/sd
+    - /var/run/docker.sock:/var/run/docker.sock
+    build: ./slave
+    container_name: slave
+    restart: always
+    depends_on:
+      - rabbitmq
+      - orchestrator
+
+  temp:
+    image: temp
+    volumes :
+    - ./sharedData/:/api
+    build: ./sharedData
+    container_name: sharedData
+    restart: always
+    depends_on:
+      - rabbitmq
+      - orchestrator
+
+
+
+

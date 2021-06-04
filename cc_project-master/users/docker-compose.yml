@@ -1,0 +1,13 @@
+version: "3.6.9"
+
+services:
+  user:
+      image : users:latest
+      volumes:
+        - ./user/:/api
+      build: ./user
+      container_name: users
+      restart: always
+      ports: 
+        - "80:8080"
+

@@ -1,0 +1,13 @@
+
+version: "3"
+
+services:
+  ride:
+      image : rides:latest
+      volumes:
+        - ./ride/:/api
+      build: ./ride
+      container_name: rides
+      restart: always
+      ports:
+        - "80:8000"

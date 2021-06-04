@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  user:
+      image : users:latest
+      volumes:
+        - ./user/:/api
+      build: ./user
+      container_name: users
+      restart: always
+      ports: 
+        - "8080:8080"
+    
+
+  ride:
+      image : rides:latest
+      volumes:
+        - ./ride/:/api
+      build: ./ride
+      container_name: rides
+      restart: always
+      ports: 
+        - "8000:8000"
+      links:
+        - user
+      
+

@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  user:
+      build: ./user
+      container_name: user
+      restart: always
+      # environment: 
+        # - APP_NAME = UserApp
+        
+      # expose: 8080
+      ports: 
+        - "8080:8080"
+    
+
+  ride:
+      build: ./ride
+      container_name: ride
+      restart: always
+      ports: 
+        - "8000:8000"
+      links:
+        - user
+      
